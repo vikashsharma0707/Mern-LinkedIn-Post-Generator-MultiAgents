@@ -45,7 +45,7 @@ const AnalyticsPage = () => {
     return (
       <div className="text-center py-12">
         <BarChart3 size={48} className="text-secondary-300 mx-auto mb-4" />
-        <p className="text-secondary-600">Failed to load analytics</p>
+        <p className="text-secondary-600">Failed to load analytics  ai</p>
       </div>
     )
   }
