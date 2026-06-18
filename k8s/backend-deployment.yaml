@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: backend
+
+  template:
+    metadata:
+      labels:
+        app: backend
+
+    spec:
+      containers:
+        - name: backend
+          image: vikashsharma0707/linkedin-backend:latest
+
+          ports:
+            - containerPort: 5000
+
+          env:
+            - name: NODE_ENV
+              value: "production"
+
+            - name:  MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key:  MONGODB_URI
+
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: JWT_SECRET

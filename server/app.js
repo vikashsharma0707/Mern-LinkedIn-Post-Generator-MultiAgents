@@ -20,9 +20,16 @@ const app = express();
 
 connectDB();
 
+// app.use(cors({
+//   origin: ['http://localhost:5173', 'http://localhost:3000'],
+//   credentials: true
+// }));
+
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
-  credentials: true
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
 app.use(express.json({ limit: '10mb' }));
@@ -41,6 +48,28 @@ app.use('/api/history', historyRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
+
+app.get("/", (req, res) => {
+res.status(200).json({
+success: true,
+message: "🚀 LinkedIn AI Agent Backend is Live",
+version: "1.0.0",
+health: "/api/health",
+docs: {
+auth: "/api/auth",
+posts: "/api/posts",
+hooks: "/api/hooks",
+hashtags: "/api/hashtags",
+improve: "/api/improve",
+viral: "/api/viral",
+carousel: "/api/carousel",
+repurpose: "/api/repurpose",
+analytics: "/api/analytics",
+history: "/api/history"
+}
+});
+});
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
