@@ -135,27 +135,21 @@
 
 
 
-// api.js
 import axios from 'axios';
 
-// Production vs Development को handle करो
-const getBaseURL = () => {
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
-  
-  // Fallback for production if env var is not set
-  return 'https://mern-linkedin-post-generator-multiagents.onrender.com/api';
-};
+// Debug log करो - production में क्या value आ रही है
+console.log('API URL:', import.meta.env.VITE_API_URL);
 
 const api = axios.create({
-  baseURL: getBaseURL(),
+  baseURL: import.meta.env.VITE_API_URL || 
+           'https://mern-linkedin-post-generator-multiagents.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 api.interceptors.request.use((config) => {
+  console.log('Request to:', config.baseURL + config.url); // Debug
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -166,9 +160,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('API Error:', error.response?.status, error.message);
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/login'; // redirect करो
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }
