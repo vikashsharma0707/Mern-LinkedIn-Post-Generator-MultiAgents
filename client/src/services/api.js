@@ -217,7 +217,7 @@ function getApiBaseUrl() {
   }
 
   // Fallback (Production safety)
-  return 'https://mern-linkedin-post-generator-multiagents.onrender.com/api';
+  return 'https://mern-linkedin-post-generator-multiagents-viyi.onrender.com/api';
 }
 
 const api = axios.create({

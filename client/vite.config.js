@@ -89,7 +89,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://mern-linkedin-post-generator-multiagents.onrender.com',
+        target: 'https://mern-linkedin-post-generator-multiagents-viyi.onrender.com/',
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/api/, '/api') // clean handling
