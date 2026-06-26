@@ -161,7 +161,7 @@
 //   headers: {
 //     'Content-Type': 'application/json',
 //   },
-//   timeout: 10000,
+//   timeout: 600000,
 // });
 
 // console.log('Axios instance baseURL:', api.defaults.baseURL);
@@ -198,39 +198,67 @@
 // export default api;
 
 
-// api.js
+
+
 import axios from 'axios';
 
-const BACKEND_URL = 'https://mern-linkedin-post-generator-multiagents.onrender.com/api';
+function getApiBaseUrl() {
+  const envUrl = import.meta.env.VITE_API_URL?.trim();
+
+  console.log('VITE_API_URL from env:', envUrl);
+
+  if (envUrl) {
+    // Agar already /api ke saath hai to clean rakho
+    const cleanUrl = envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl;
+    const finalUrl = cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
+    
+    console.log('Final API Base URL:', finalUrl);
+    return finalUrl;
+  }
+
+  // Fallback (Production safety)
+  return 'https://mern-linkedin-post-generator-multiagents.onrender.com/api';
+}
 
 const api = axios.create({
-  baseURL: BACKEND_URL,
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 120000, // 2 minutes
 });
 
-console.log('Using hardcoded API URL:', BACKEND_URL);
+console.log('Axios initialized with baseURL:', api.defaults.baseURL);
 
+// Request Interceptor
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  console.log('Full request URL:', config.baseURL + config.url);
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  return config;
-});
 
+  // Debug log (production mein comment kar dena)
+  console.log(`🚀 API Request: ${config.baseURL}${config.url}`);
+
+  return config;
+}, (error) => Promise.reject(error));
+
+// Response Interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('API Error:', error);
+    console.error('❌ API Error Details:', {
+      status: error.response?.status,
+      message: error.response?.data?.message || error.message,
+      url: error.config?.baseURL + error.config?.url,
+    });
+
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      window.location.href = '/admin/login'; // ya jahan bhi login hai
     }
+
     return Promise.reject(error);
   }
 );
