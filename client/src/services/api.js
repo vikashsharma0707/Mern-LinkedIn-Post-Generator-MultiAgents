@@ -205,19 +205,23 @@ import axios from 'axios';
 function getApiBaseUrl() {
   const envUrl = import.meta.env.VITE_API_URL?.trim();
 
-  console.log('VITE_API_URL from env:', envUrl);
+  console.log('🔍 VITE_API_URL from env:', envUrl);
 
   if (envUrl) {
-    // Agar already /api ke saath hai to clean rakho
     const cleanUrl = envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl;
-    const finalUrl = cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
     
-    console.log('Final API Base URL:', finalUrl);
+    // Agar user ne already /api daal diya ho to bhi handle karo
+    const finalUrl = cleanUrl.endsWith('/api') 
+      ? cleanUrl 
+      : `${cleanUrl}/api`;
+
+    console.log('✅ Final API Base URL:', finalUrl);
     return finalUrl;
   }
 
-  // Fallback (Production safety)
-  return 'https://mern-linkedin-post-generator-multiagents-viyi.onrender.com/api';
+  // Production Fallback (agar env nahi mili to)
+  console.warn('⚠️ VITE_API_URL not found! Using Render fallback');
+  return 'https://mern-linkedin-post-generator-multiagents.onrender.com/api';
 }
 
 const api = axios.create({

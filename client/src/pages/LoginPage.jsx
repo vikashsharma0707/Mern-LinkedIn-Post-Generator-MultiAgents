@@ -37,7 +37,7 @@ const LoginPage = () => {
           <div className="w-14 h-14 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center mx-auto mb-4">
             <Bot size={28} className="text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-secondary-900">Welcome Back</h1>
+          <h1 className="text-2xl font-bold text-secondary-900">Welcome Back Project</h1>
           <p className="text-secondary-500 mt-1">Sign in to your LinkedIn Post Generator</p>
         </div>
 
